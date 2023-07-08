@@ -18,13 +18,14 @@ def extract_tables_from_pdf(pdf_link, output_file):
             tables = page.extract_tables()
             for table in tables:
                 df = pd.DataFrame(table[1:], columns=table[0])
-                # Clean up specific columns
-                if df.columns[1] in df:
-                    df[df.columns[1]] = df[df.columns[1]].str.replace("Rp", "").str.replace(" ", "").str.replace(",-", "").str.replace(".", "")
-                    df[df.columns[1]] = pd.to_numeric(df[df.columns[1]], errors='coerce')
-                if df.columns[2] in df:
-                    df[df.columns[2]] = df[df.columns[2]].str.replace("%", "").str.replace(" ", "").str.replace("p.a", "")
-                    df[df.columns[2]] = pd.to_numeric(df[df.columns[2]], errors='coerce')
+                # Clean up specific columns for the first two tables
+                if len(data_frames) < 2:
+                    if df.columns[1] in df:
+                        df[df.columns[1]] = df[df.columns[1]].str.replace("Rp", "", regex=True).str.replace(" ", "", regex=True).str.replace(",-", "", regex=True).str.replace(".", "", regex=True)
+                        df[df.columns[1]] = pd.to_numeric(df[df.columns[1]], errors='coerce')
+                    if df.columns[2] in df:
+                        df[df.columns[2]] = df[df.columns[2]].str.replace("%", "", regex=True).str.replace(" ", "", regex=True).str.replace("p.a", "", regex=True)
+                        df[df.columns[2]] = pd.to_numeric(df[df.columns[2]], errors='coerce')
                 data_frames.append(df)
     
     # Write data frames to Excel file
