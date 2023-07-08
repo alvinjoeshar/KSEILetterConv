@@ -28,6 +28,17 @@ def extract_tables_from_pdf(pdf_link, output_file):
                         df[df.columns[2]] = pd.to_numeric(df[df.columns[2]], errors='coerce')
                 data_frames.append(df)
     
+    # Add issuer name, bond name, and sukuk name
+    issuer_name = "PT Indah Kiat Pulp & Paper Tbk"
+    bond_name = "Obligasi Berkelanjutan IV Indah Kiat Pulp & Paper Tahap I Tahun 2023"
+    sukuk_name = "Sukuk Mudharabah Berkelanjutan III Indah Kiat Pulp & Paper Tahap I Tahun 2023"
+    
+    data_frames[0].insert(0, 'Issuer Name', issuer_name)
+    data_frames[0].insert(1, 'Bond Name', bond_name)
+    data_frames[1].insert(0, 'Issuer Name', issuer_name)
+    data_frames[1].insert(1, 'Sukuk Name', sukuk_name)
+    data_frames[2].insert(0, 'Issuer Name', issuer_name)
+    
     # Write data frames to Excel file
     with pd.ExcelWriter(output_file) as writer:
         data_frames[0].to_excel(writer, sheet_name='Obligasi', index=False)
